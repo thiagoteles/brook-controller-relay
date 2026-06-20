@@ -93,10 +93,6 @@ Click any button on the arcade layout to remap it. The default profile is set up
 | Select | Tab | Select |
 | Home | Escape | Home/Pause |
 
-### 5. Configure CrossOver/Wine
-
-In your CrossOver bottle, go to **Wine Configuration → Gaming** and set the input to **Keyboard** (not Gamepad/Joystick). The game will see the injected keyboard events.
-
 ## Features
 
 - **Device picker** — Auto-detects connected HID controllers, no manual VID/PID entry
