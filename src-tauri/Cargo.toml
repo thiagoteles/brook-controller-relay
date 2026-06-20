@@ -1,0 +1,19 @@
+[package]
+name = "brook-controller-relay"
+version = "1.0.0"
+description = "Brook Controller Relay — HID-to-Keyboard for macOS + CrossOver/Wine"
+authors = ["Thiago"]
+edition = "2021"
+
+[lib]
+name = "brook_controller_relay_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+dirs = "6"

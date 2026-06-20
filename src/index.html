@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brook Controller Relay</title>
+  <meta name="description" content="HID-to-Keyboard relay for Brook fighting boards on macOS" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div id="app">
+    <!-- ── Header ──────────────────────────────────────────────── -->
+    <header class="header">
+      <div class="header-left">
+        <span class="app-icon">🎮</span>
+        <h1 class="app-title">Brook Controller Relay</h1>
+      </div>
+      <div class="header-right">
+        <div id="status-indicator" class="status-indicator disconnected">
+          <span class="status-dot"></span>
+          <span id="status-text">Disconnected</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Main Content ────────────────────────────────────────── -->
+    <main class="main-content">
+      <!-- Controller Visualization -->
+      <section class="controller-panel">
+        <!-- Profile Bar -->
+        <div class="profile-bar">
+          <label for="profile-select">Profile</label>
+          <select id="profile-select" class="profile-select"></select>
+          <button id="btn-save-profile" class="btn btn-sm" title="Save profile">💾</button>
+          <button id="btn-rename-profile" class="btn btn-sm" title="Rename profile">✏️</button>
+          <button id="btn-new-profile" class="btn btn-sm" title="New profile">＋</button>
+          <button id="btn-delete-profile" class="btn btn-sm btn-danger" title="Delete profile">🗑</button>
+        </div>
+
+        <!-- Arcade Stick Layout -->
+        <div class="controller-viz">
+          <div class="viz-title">Arcade Stick Layout</div>
+
+          <div class="button-grid">
+            <!-- D-Pad -->
+            <div class="dpad-container">
+              <div class="dpad">
+                <div class="dpad-btn dpad-blank"></div>
+                <div class="dpad-btn" data-dir="up" id="dpad-up">↑</div>
+                <div class="dpad-btn dpad-blank"></div>
+                <div class="dpad-btn" data-dir="left" id="dpad-left">←</div>
+                <div class="dpad-btn dpad-center">●</div>
+                <div class="dpad-btn" data-dir="right" id="dpad-right">→</div>
+                <div class="dpad-btn dpad-blank"></div>
+                <div class="dpad-btn" data-dir="down" id="dpad-down">↓</div>
+                <div class="dpad-btn dpad-blank"></div>
+              </div>
+            </div>
+
+            <!-- Action Buttons (4x2 grid, matching physical layout) -->
+            <div class="action-buttons">
+              <!-- Top Row: □ △ R1 L2 -->
+              <div class="button-row">
+                <div class="arcade-btn" data-btn="btn1" id="arcade-btn1">
+                  <span class="btn-label">□ Light</span>
+                  <span class="key-label" id="key-btn1">U</span>
+                </div>
+                <div class="arcade-btn" data-btn="btn4" id="arcade-btn4">
+                  <span class="btn-label">△ Special</span>
+                  <span class="key-label" id="key-btn4">I</span>
+                </div>
+                <div class="arcade-btn" data-btn="btn6" id="arcade-btn6">
+                  <span class="btn-label">R1 L+M</span>
+                  <span class="key-label" id="key-btn6">H</span>
+                  <span class="secondary-key" id="sec-btn6">+Q</span>
+                </div>
+                <div class="arcade-btn" data-btn="btn5" id="arcade-btn5">
+                  <span class="btn-label">L1 Impact</span>
+                  <span class="key-label" id="key-btn5">Y</span>
+                  <span class="secondary-key" id="sec-btn5">+E</span>
+                </div>
+              </div>
+              <!-- Bottom Row: × ○ R2 L1 -->
+              <div class="button-row">
+                <div class="arcade-btn" data-btn="btn2" id="arcade-btn2">
+                  <span class="btn-label">× Medium</span>
+                  <span class="key-label" id="key-btn2">J</span>
+                </div>
+                <div class="arcade-btn" data-btn="btn3" id="arcade-btn3">
+                  <span class="btn-label">○ Heavy</span>
+                  <span class="key-label" id="key-btn3">K</span>
+                </div>
+                <div class="arcade-btn" data-btn="btn8" id="arcade-btn8">
+                  <span class="btn-label">R2 Assist</span>
+                  <span class="key-label" id="key-btn8">L</span>
+                </div>
+                <div class="arcade-btn" data-btn="btn7" id="arcade-btn7">
+                  <span class="btn-label">L2 Parry</span>
+                  <span class="key-label" id="key-btn7">O</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Meta Buttons -->
+          <div class="meta-buttons">
+            <div class="meta-btn" data-btn="btn10" id="arcade-btn10">
+              <span class="meta-label">Start</span>
+              <span class="meta-key" id="key-btn10">F</span>
+            </div>
+            <div class="meta-btn" data-btn="btn14" id="arcade-btn14">
+              <span class="meta-label">Select</span>
+              <span class="meta-key" id="key-btn14">⇥</span>
+            </div>
+            <div class="meta-btn" data-btn="btn13" id="arcade-btn13">
+              <span class="meta-label">Home</span>
+              <span class="meta-key" id="key-btn13">⎋</span>
+            </div>
+            <div class="meta-btn" data-btn="btn9" id="arcade-btn9">
+              <span class="meta-label">Touch</span>
+              <span class="meta-key" id="key-btn9">—</span>
+            </div>
+            <div class="meta-btn" data-btn="btn11" id="arcade-btn11">
+              <span class="meta-label">L3</span>
+              <span class="meta-key" id="key-btn11">—</span>
+            </div>
+            <div class="meta-btn" data-btn="btn12" id="arcade-btn12">
+              <span class="meta-label">R3</span>
+              <span class="meta-key" id="key-btn12">—</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Sidebar -->
+      <aside class="sidebar">
+        <!-- Relay Control -->
+        <div class="sidebar-section">
+          <div class="section-title">🕹 Relay Control</div>
+          <div class="relay-control">
+            <button id="btn-relay" class="btn relay-btn start">▶ Start Relay</button>
+            <div class="toggle-row">
+              <span class="toggle-label">Keyboard Injection</span>
+              <div id="toggle-injection" class="toggle active" role="switch" aria-checked="true" tabindex="0"></div>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Start Relay Automatically</span>
+              <div id="toggle-autostart" class="toggle" role="switch" aria-checked="false" tabindex="0"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Device Settings -->
+        <div class="sidebar-section">
+          <div class="section-title">⚙ Device</div>
+          <div class="input-group">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <label class="input-label" for="device-select">Controller</label>
+              <button id="btn-refresh-devices" class="btn btn-sm" title="Refresh device list">🔄</button>
+            </div>
+            <select id="device-select" class="profile-select"></select>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">Seize Device</span>
+            <div id="toggle-seize" class="toggle active" role="switch" aria-checked="true" tabindex="0"></div>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="sidebar-section">
+          <div class="section-title">ℹ Info</div>
+          <p style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">
+            Click any button on the arcade layout to remap it.
+            Press buttons on your controller to see them light up in real-time.
+          </p>
+          <p style="font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-top: 8px;">
+            <strong style="color: var(--text-secondary);">Switch Mode Required:</strong>
+            Hold R1 while plugging in the Brook board.
+          </p>
+        </div>
+      </aside>
+    </main>
+
+    <!-- ── Status Bar ──────────────────────────────────────────── -->
+    <footer class="status-bar">
+      <div class="status-bar-left">
+        <span>Brook Controller Relay v1.0.0</span>
+        <span class="last-event" id="last-event">Ready</span>
+      </div>
+      <span id="device-name">No device</span>
+    </footer>
+
+    <!-- ── Key Picker Modal ────────────────────────────────────── -->
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-title" id="modal-title">Remap Button</span>
+          <button class="modal-close" id="modal-close">✕</button>
+        </div>
+        <div class="modal-body">
+          <!-- Button Label -->
+          <div class="key-assign-section">
+            <div class="key-assign-label">Button Label</div>
+            <input id="modal-label" class="label-input" type="text" placeholder="e.g., Light Attack" />
+          </div>
+          <!-- Primary Key -->
+          <div class="key-assign-section">
+            <div class="key-assign-label">Primary Key</div>
+            <div id="primary-key-box" class="key-assign-value" tabindex="0">
+              Press to assign...
+            </div>
+            <div class="key-assign-hint">Click the box, then press a key on your keyboard</div>
+          </div>
+          <!-- Secondary Key -->
+          <div class="key-assign-section">
+            <div class="key-assign-label">Secondary Key (optional)</div>
+            <div id="secondary-key-box" class="key-assign-value" tabindex="0">
+              None
+            </div>
+            <div class="key-assign-hint">For dual-key buttons (e.g., H + Q for L+M + Tab)</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="modal-clear" class="btn btn-danger btn-sm">Clear</button>
+          <button id="modal-cancel" class="btn">Cancel</button>
+          <button id="modal-save" class="btn btn-primary">Save Mapping</button>
+        </div>
+      </div>
+    </div>
+    <!-- ── Prompt / Confirm Dialog ──────────────────────────── -->
+    <div id="dialog-overlay" class="modal-overlay">
+      <div class="modal" style="width: 380px;">
+        <div class="modal-header">
+          <span class="modal-title" id="dialog-title">Dialog</span>
+          <button class="modal-close" id="dialog-close">✕</button>
+        </div>
+        <div class="modal-body">
+          <p id="dialog-message" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 14px;"></p>
+          <input id="dialog-input" class="label-input" type="text" placeholder="" style="display: none;" />
+        </div>
+        <div class="modal-footer">
+          <button id="dialog-cancel" class="btn">Cancel</button>
+          <button id="dialog-ok" class="btn btn-primary">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js" type="module"></script>
+</body>
+
+</html>
