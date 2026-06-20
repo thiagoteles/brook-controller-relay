@@ -59,11 +59,28 @@ npm run tauri build
 
 The `.dmg` will be in `src-tauri/target/release/bundle/dmg/`.
 
+## Download & Install
+
+1. Download the latest `.dmg` from [Releases](https://github.com/thiagoteles/brook-controller-relay/releases)
+   - **Apple Silicon (M1/M2/M3/M4):** `_aarch64.dmg`
+   - **Intel Macs:** `_x64.dmg`
+2. Open the `.dmg` and drag **Brook Controller Relay** to Applications
+3. **Remove the quarantine flag** (required for unsigned apps):
+   ```bash
+   xattr -cr "/Applications/Brook Controller Relay.app"
+   ```
+4. **Grant Input Monitoring permission:**
+   - Open **System Settings → Privacy & Security → Input Monitoring**
+   - Enable **Brook Controller Relay.app**
+   - You may need to restart the app after granting permission
+
+> **Note:** Steps 3 and 4 are only needed on the first launch. The app is not signed with an Apple Developer certificate, so macOS will show a "damaged" warning without the quarantine fix.
+
 ## Usage
 
 ### 1. Boot the Brook Board in Switch Mode
 
-**Hold R1 while plugging in the USB cable.** This boots the Brook Gen-5X in Nintendo Switch mode (`VID: 0x0f0d, PID: 0x0202`), which is the only mode that doesn't crash or drop inputs on macOS.
+**Hold R1 while plugging in the USB cable.** This boots the Brook Gen-5X in Nintendo Switch mode (`VID: 0x0f0d, PID: 0x0202`). Other boot modes may work, but Switch mode is the most reliable in our testing — PS5 and Xbox modes had issues with crashes and dropped inputs on Apple Silicon.
 
 ### 2. Select Your Device
 
