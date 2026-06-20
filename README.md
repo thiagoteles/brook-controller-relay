@@ -16,7 +16,6 @@ macOS on Apple Silicon has **two showstopper bugs** for third-party USB controll
 
 1. **XInput mode drops inputs** — macOS claims XInput (Xbox) devices but silently drops input from non-first-party controllers on Apple Silicon.
 2. **PS5 mode crashes** — macOS sends advanced DualSense haptic/LED commands that the Brook board can't handle, causing it to crash every ~6 seconds.
-3. **CrossOver can't see controllers** — Even in Switch mode (the only stable boot mode), CrossOver/Wine has no way to read HID devices that macOS has already claimed.
 
 **Result:** Your arcade stick is invisible to the game. No existing driver, mapping tool, or Wine configuration fixes this.
 
